@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'src/features/onboarding/screens/onboarding_screen.dart';
+import 'src/features/welcome/screens/welcome_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         fontFamily: 'Roboto', // Default font, bisa diganti nanti
       ),
-      home: const OnboardingScreen(),
+      home: const WelcomeScreen(),
     );
   }
 }
