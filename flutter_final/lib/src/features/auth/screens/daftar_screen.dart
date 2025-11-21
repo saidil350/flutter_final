@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'daftar_screen.dart';
+import 'login_screen.dart';
 import '../widgets/auth_header.dart';
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+class DaftarScreen extends StatelessWidget {
+  const DaftarScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,7 @@ class LoginScreen extends StatelessWidget {
 
                   // --- Title Header ---
                   const Text(
-                    'Masuk',
+                    'Daftar',
                     style: TextStyle(
                       color: Color(0xFF242424),
                       fontSize: 28,
@@ -65,18 +65,18 @@ class LoginScreen extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
-                        _buildTextField(hint: "Masukkan Email"),
+                        _buildTextField(hint: "Enter your Email"),
                         const SizedBox(height: 20),
                         _buildTextField(
-                          hint: "Masukkan Password",
+                          hint: "Enter Password",
                           isObscure: true,
                         ),
                         const SizedBox(height: 30),
 
-                        // Login Button
+                        // Daftar Button
                         GestureDetector(
                           onTap: () {
-                            // Implementasi login
+                            // Implementasi register
                           },
                           child: Container(
                             width: double.infinity,
@@ -89,7 +89,7 @@ class LoginScreen extends StatelessWidget {
                             ),
                             alignment: Alignment.center,
                             child: const Text(
-                              'Masuk',
+                              'Daftar',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 18,
@@ -102,12 +102,12 @@ class LoginScreen extends StatelessWidget {
 
                         const SizedBox(height: 20),
 
-                        // Register Link
+                        // Login Link
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             const Text(
-                              "Belum punya akun? ",
+                              "sudah punya akun? ",
                               style: TextStyle(
                                 color: Color(0xFF242424),
                                 fontSize: 13,
@@ -120,12 +120,12 @@ class LoginScreen extends StatelessWidget {
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const DaftarScreen(),
+                                    builder: (context) => const LoginScreen(),
                                   ),
                                 );
                               },
                               child: const Text(
-                                "Daftar",
+                                "Login",
                                 style: TextStyle(
                                   color: Color(0xFF377CC8),
                                   fontSize: 13,
