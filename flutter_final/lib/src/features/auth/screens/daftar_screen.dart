@@ -13,13 +13,18 @@ class DaftarScreen extends StatefulWidget {
 
 class _DaftarScreenState extends State<DaftarScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _namaController = TextEditingController();
+  final _kelasController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _authService = AuthService();
   bool _isLoading = false;
+  bool _obscurePassword = true; // State untuk toggle visibility password
 
   @override
   void dispose() {
+    _namaController.dispose();
+    _kelasController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -34,6 +39,8 @@ class _DaftarScreenState extends State<DaftarScreen> {
       final response = await _authService.signUp(
         email: _emailController.text.trim(),
         password: _passwordController.text,
+        nama: _namaController.text.trim(),
+        kelas: _kelasController.text.trim(),
       );
 
       if (response.user != null && mounted) {
@@ -160,6 +167,36 @@ class _DaftarScreenState extends State<DaftarScreen> {
                       ),
                       child: Column(
                         children: [
+                          // Field Nama
+                          _buildTextField(
+                            hint: "Masukkan Nama Lengkap",
+                            controller: _namaController,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Nama tidak boleh kosong';
+                              }
+                              if (value.length < 3) {
+                                return 'Nama minimal 3 karakter';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 20),
+
+                          // Field Kelas
+                          _buildTextField(
+                            hint: "Masukkan Kelas (contoh: XII TRKJ 1)",
+                            controller: _kelasController,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Kelas tidak boleh kosong';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 20),
+
+                          // Field Email
                           _buildTextField(
                             hint: "Masukkan Email",
                             controller: _emailController,
@@ -174,10 +211,13 @@ class _DaftarScreenState extends State<DaftarScreen> {
                             },
                           ),
                           const SizedBox(height: 20),
+
+                          // Field Password
                           _buildTextField(
                             hint: "Masukkan Password",
                             controller: _passwordController,
-                            isObscure: true,
+                            isObscure: _obscurePassword,
+                            isPassword: true,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Password tidak boleh kosong';
@@ -282,6 +322,7 @@ class _DaftarScreenState extends State<DaftarScreen> {
     required String hint,
     required TextEditingController controller,
     bool isObscure = false,
+    bool isPassword = false,
     String? Function(String?)? validator,
   }) {
     return TextFormField(
@@ -316,6 +357,20 @@ class _DaftarScreenState extends State<DaftarScreen> {
           vertical: 15,
         ),
         errorStyle: const TextStyle(fontSize: 11, fontFamily: 'Poppins'),
+        suffixIcon: isPassword
+            ? IconButton(
+                icon: Icon(
+                  _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                  color: const Color(0xFF8B8B8B),
+                  size: 20,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _obscurePassword = !_obscurePassword;
+                  });
+                },
+              )
+            : null,
       ),
     );
   }

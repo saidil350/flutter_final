@@ -18,6 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   final _authService = AuthService();
   bool _isLoading = false;
+  bool _obscurePassword = true; // State untuk toggle visibility password
 
   @override
   void dispose() {
@@ -166,7 +167,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           _buildTextField(
                             hint: "Masukkan Password",
                             controller: _passwordController,
-                            isObscure: true,
+                            isObscure: _obscurePassword,
+                            isPassword: true,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Password tidak boleh kosong';
@@ -269,6 +271,7 @@ class _LoginScreenState extends State<LoginScreen> {
     required String hint,
     required TextEditingController controller,
     bool isObscure = false,
+    bool isPassword = false,
     String? Function(String?)? validator,
   }) {
     return TextFormField(
@@ -303,6 +306,20 @@ class _LoginScreenState extends State<LoginScreen> {
           vertical: 15,
         ),
         errorStyle: const TextStyle(fontSize: 11, fontFamily: 'Poppins'),
+        suffixIcon: isPassword
+            ? IconButton(
+                icon: Icon(
+                  _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                  color: const Color(0xFF8B8B8B),
+                  size: 20,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _obscurePassword = !_obscurePassword;
+                  });
+                },
+              )
+            : null,
       ),
     );
   }

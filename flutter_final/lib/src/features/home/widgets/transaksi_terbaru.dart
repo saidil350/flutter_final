@@ -1,10 +1,24 @@
 import 'package:flutter/material.dart';
+import '../../../models/wallet_models.dart';
 
 class TransaksiTerbaru extends StatelessWidget {
-  const TransaksiTerbaru({super.key});
+  final bool enableManagement;
+  final List<TransactionItem>? items;
+  final Function(TransactionItem)? onEdit;
+  final Function(String)? onDelete;
+
+  const TransaksiTerbaru({
+    super.key,
+    this.enableManagement = false,
+    this.items,
+    this.onEdit,
+    this.onDelete,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final displayItems = items ?? [];
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -20,74 +34,37 @@ class TransaksiTerbaru extends StatelessWidget {
                 color: Color(0xFF242424),
               ),
             ),
-            TextButton(
-              onPressed: () {},
-              child: const Text(
-                'Lihat Semua',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontFamily: 'Poppins',
-                  fontWeight: FontWeight.w500,
-                  color: Color(0xFF377CC8),
+            if (!enableManagement)
+              TextButton(
+                onPressed: () {},
+                child: const Text(
+                  'Lihat Semua',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xFF377CC8),
+                  ),
                 ),
               ),
-            ),
           ],
         ),
         const SizedBox(height: 16),
-        ListView(
+        ListView.separated(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          children: [
-            _buildTransactionItem(
-              title: 'Adobe Illustrator',
-              subtitle: 'Subscription fee',
-              amount: '-\$32.00',
-              color: const Color(0xFFF2C94C), // Yellow
-              icon: Icons.laptop_mac,
-              isNegative: true,
-            ),
-            const SizedBox(height: 16),
-            _buildTransactionItem(
-              title: 'Dribbble',
-              subtitle: 'Subscription fee',
-              amount: '-\$15.00',
-              color: const Color(0xFFF2C94C), // Yellow
-              icon: Icons.laptop_mac,
-              isNegative: true,
-            ),
-            const SizedBox(height: 16),
-            _buildTransactionItem(
-              title: 'Sony Camera',
-              subtitle: 'Shopping fee',
-              amount: '-\$200.00',
-              color: const Color(0xFFEB869A), // Pink
-              icon: Icons.shopping_bag_outlined,
-              isNegative: true,
-            ),
-            const SizedBox(height: 16),
-            _buildTransactionItem(
-              title: 'Paypal',
-              subtitle: 'Salary',
-              amount: '+\$32.00',
-              color: const Color(0xFF27AE60), // Green
-              icon: Icons.credit_card,
-              isNegative: false,
-            ),
-          ],
+          itemCount: displayItems.length,
+          separatorBuilder: (context, index) => const SizedBox(height: 16),
+          itemBuilder: (context, index) {
+            final item = displayItems[index];
+            return _buildTransactionItem(item);
+          },
         ),
       ],
     );
   }
 
-  Widget _buildTransactionItem({
-    required String title,
-    required String subtitle,
-    required String amount,
-    required Color color,
-    required IconData icon,
-    required bool isNegative,
-  }) {
+  Widget _buildTransactionItem(TransactionItem item) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -106,10 +83,10 @@ class TransaksiTerbaru extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
+              color: item.color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(16),
             ),
-            child: Icon(icon, color: color, size: 24),
+            child: Icon(Icons.payment, color: item.color, size: 24),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -117,7 +94,7 @@ class TransaksiTerbaru extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  title,
+                  item.title,
                   style: const TextStyle(
                     fontSize: 16,
                     fontFamily: 'Poppins',
@@ -127,10 +104,11 @@ class TransaksiTerbaru extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  subtitle,
+                  item.dateDescription,
                   style: const TextStyle(
                     fontSize: 12,
                     fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w400,
                     color: Color(0xFF8B8B8B),
                   ),
                 ),
@@ -138,16 +116,85 @@ class TransaksiTerbaru extends StatelessWidget {
             ),
           ),
           Text(
-            amount,
+            item.amount,
             style: TextStyle(
               fontSize: 16,
               fontFamily: 'Poppins',
               fontWeight: FontWeight.w600,
-              color: isNegative
-                  ? const Color(0xFFEB5757)
-                  : const Color(0xFF27AE60),
+              color: item
+                  .color, // Warna sesuai tipe: hijau (pemasukan) atau merah (pengeluaran)
             ),
           ),
+          if (enableManagement) ...[
+            const SizedBox(width: 8),
+            PopupMenuButton<String>(
+              icon: const Icon(
+                Icons.more_vert,
+                color: Color(0xFF8B8B8B),
+                size: 20,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              elevation: 4,
+              offset: const Offset(0, 8),
+              onSelected: (value) {
+                if (value == 'Edit') {
+                  onEdit?.call(item);
+                } else if (value == 'Delete') {
+                  onDelete?.call(item.id);
+                }
+              },
+              itemBuilder: (BuildContext context) {
+                return [
+                  PopupMenuItem<String>(
+                    value: 'Edit',
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.edit_outlined,
+                          size: 18,
+                          color: const Color(0xFF377CC8),
+                        ),
+                        const SizedBox(width: 12),
+                        Text(
+                          'Edit',
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 14,
+                            color: const Color(0xFF377CC8),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  PopupMenuItem<String>(
+                    value: 'Delete',
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.delete_outline,
+                          size: 18,
+                          color: const Color(0xFFEB5757),
+                        ),
+                        const SizedBox(width: 12),
+                        Text(
+                          'Delete',
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 14,
+                            color: const Color(0xFFEB5757),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ];
+              },
+            ),
+          ],
         ],
       ),
     );

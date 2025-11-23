@@ -48,7 +48,7 @@ class WelcomeScreen extends StatelessWidget {
                       SizedBox(
                         width: 311, // Lebar teks dibatasi
                         child: Text(
-                          'Saidil Mursal Financial Management',
+                          'Saidil Mursal Fintrack Management',
                           style: TextStyle(
                             color: Color(0xFF242424),
                             fontSize: 32,
@@ -62,7 +62,7 @@ class WelcomeScreen extends StatelessWidget {
                       SizedBox(
                         width: 284,
                         child: Text(
-                          'Financial adalah aplikasi mobile yang dapat membantu kamu mengelola keuangan dengan cara yang sederhana.',
+                          'Fintrack adalah aplikasi mobile yang dapat membantu kamu mengelola keuangan dengan cara yang sederhana.',
                           style: TextStyle(
                             color: Color(0xFF242424),
                             fontSize: 14,

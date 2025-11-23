@@ -10,12 +10,18 @@ class AuthService {
   // Stream untuk listen perubahan auth state
   Stream<AuthState> get authStateChanges => _auth.onAuthStateChange;
 
-  // Register dengan email dan password
+  // Register dengan email, password, nama, dan kelas
   Future<AuthResponse> signUp({
     required String email,
     required String password,
+    required String nama,
+    required String kelas,
   }) async {
-    return await _auth.signUp(email: email, password: password);
+    return await _auth.signUp(
+      email: email,
+      password: password,
+      data: {'nama': nama, 'kelas': kelas},
+    );
   }
 
   // Login dengan email dan password

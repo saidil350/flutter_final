@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class KartuSaldo extends StatelessWidget {
-  const KartuSaldo({super.key});
+  final double balance;
+
+  const KartuSaldo({super.key, required this.balance});
 
   @override
   Widget build(BuildContext context) {
+    final formatter = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp ',
+      decimalDigits: 0,
+    );
+
     return Container(
       width: double.infinity,
       height: 180,
@@ -65,10 +74,10 @@ class KartuSaldo extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Column(
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'Total Saldo',
                     style: TextStyle(
                       fontSize: 14,
@@ -76,40 +85,14 @@ class KartuSaldo extends StatelessWidget {
                       color: Colors.white70,
                     ),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
-                    'Rp 25.000.40', // Matching the design's number format roughly
-                    style: TextStyle(
+                    formatter.format(balance),
+                    style: const TextStyle(
                       fontSize: 32,
                       fontFamily: 'Poppins',
                       fontWeight: FontWeight.w600,
                       color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  const Text(
-                    'Dompet Saya',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontFamily: 'Poppins',
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.arrow_forward,
-                      color: Color(0xFF2C3135),
-                      size: 20,
                     ),
                   ),
                 ],
