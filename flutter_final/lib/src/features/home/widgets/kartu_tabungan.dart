@@ -6,6 +6,7 @@ class KartuTabungan extends StatelessWidget {
   final List<SavingItem>? items;
   final Function(SavingItem)? onAddSaldo;
   final Function(String)? onDelete;
+  final VoidCallback? onViewAll;
 
   const KartuTabungan({
     super.key,
@@ -13,6 +14,7 @@ class KartuTabungan extends StatelessWidget {
     this.items,
     this.onAddSaldo,
     this.onDelete,
+    this.onViewAll,
   });
 
   @override
@@ -40,7 +42,7 @@ class KartuTabungan extends StatelessWidget {
             ),
             if (!enableManagement)
               TextButton(
-                onPressed: () {},
+                onPressed: () => onViewAll?.call(),
                 child: const Text(
                   'Lihat Semua',
                   style: TextStyle(

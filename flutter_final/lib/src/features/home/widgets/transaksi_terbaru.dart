@@ -6,6 +6,7 @@ class TransaksiTerbaru extends StatelessWidget {
   final List<TransactionItem>? items;
   final Function(TransactionItem)? onEdit;
   final Function(String)? onDelete;
+  final VoidCallback? onViewAll;
 
   const TransaksiTerbaru({
     super.key,
@@ -13,6 +14,7 @@ class TransaksiTerbaru extends StatelessWidget {
     this.items,
     this.onEdit,
     this.onDelete,
+    this.onViewAll,
   });
 
   @override
@@ -36,7 +38,7 @@ class TransaksiTerbaru extends StatelessWidget {
             ),
             if (!enableManagement)
               TextButton(
-                onPressed: () {},
+                onPressed: () => onViewAll?.call(),
                 child: const Text(
                   'Lihat Semua',
                   style: TextStyle(

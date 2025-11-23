@@ -30,7 +30,7 @@ class RingkasanKeuangan extends StatelessWidget {
           Expanded(
             child: _buildSummaryItem(
               title: 'Pemasukan',
-              amount: formatter.format(income),
+              amount: _formatCurrency(income),
               icon: Icons.arrow_downward,
               color: const Color(0xFF27AE60),
               isIncome: true,
@@ -40,7 +40,7 @@ class RingkasanKeuangan extends StatelessWidget {
           Expanded(
             child: _buildSummaryItem(
               title: 'Pengeluaran',
-              amount: formatter.format(expense),
+              amount: _formatCurrency(expense),
               icon: Icons.arrow_upward,
               color: const Color(0xFFEB5757),
               isIncome: false,
@@ -49,6 +49,37 @@ class RingkasanKeuangan extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  // Format currency, showing millions with two decimal digits
+  // Format currency:
+  // - >= 1 juta => show in Juta with two decimal digits (e.g., 12.35 Juta)
+  // - >= 1 ribu => show in Ribu without decimal (e.g., 500 Ribu)
+  // - else => normal Rupiah format
+  // Format currency:
+  // - >= 1 juta  → show in Juta; if the value is a whole number of juta, omit decimal digits
+  // - >= 1 ribu → show in Ribu without decimal
+  // - else      → normal Rupiah format
+  String _formatCurrency(double amount) {
+    if (amount >= 1000000) {
+      double result = amount / 1000000;
+      // If result is an integer (e.g., 10.0), show without decimal
+      String resultStr = (result.truncateToDouble() == result)
+          ? result.toStringAsFixed(0)
+          : result.toStringAsFixed(2);
+      return 'Rp $resultStr Juta';
+    } else if (amount >= 1000) {
+      double result = amount / 1000;
+      // No decimal needed for ribu, show as integer
+      String resultStr = result.toStringAsFixed(0);
+      return 'Rp $resultStr Ribu';
+    }
+    final formatter = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp ',
+      decimalDigits: 0,
+    );
+    return formatter.format(amount);
   }
 
   Widget _buildSummaryItem({
